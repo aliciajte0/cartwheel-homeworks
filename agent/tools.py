@@ -20,10 +20,14 @@ from __future__ import annotations
 
 from typing import Any
 
+from datetime import timedelta
+
 from agent import db
-from agent.auth import AuthContext, can_cancel_order, permission_denied
+from agent.auth import AuthContext, can_cancel_order, can_view_order, permission_denied
+from agent.config import load_facts
 from agent.helpcenter import load_policy_docs
 from agent.killswitch import kill_switch
+from seed.eligibility import effective_return_window_days
 
 MAX_SEARCH_LIMIT = 25
 DEFAULT_ORDER_LIMIT = 20
@@ -300,3 +304,335 @@ def find_order(ctx: AuthContext, query: str) -> dict[str, Any]:
 
     scored.sort(key=lambda x: -x[0])
     return {"ok": True, "orders": [item[1] for item in scored[:5]]}
+
+
+def check_refund_eligibility(ctx: AuthContext, order_id: int) -> dict[str, Any]:
+    """Check whether an order is eligible for a return or refund, with a reason.
+
+    Uses the same authorization as get_order: shoppers see only their own
+    orders, merchants only their store's orders, support any order.
+
+    Args:
+        ctx: The caller's auth context.
+        order_id: The order to check.
+
+    Returns:
+        On success: {"ok": True, "order_id": int, "eligible": bool,
+        "reason": str, "return_window_days": int, "window_expires": str}
+        where reason explains why the order is or is not eligible, and
+        window_expires is the last eligible date (or null if not applicable).
+        On failure: not_found or permission_denied errors.
+    """
+    facts = load_facts()
+    with db.connection() as conn:
+        order = db.get_order(conn, order_id)
+        if order is None:
+            return {"ok": False, "error": "not_found", "reason": f"no order #{order_id}"}
+        if not can_view_order(ctx, order.user_id, order.store_id):
+            return permission_denied(
+                f"role '{ctx.role}' (user {ctx.user_id}) may not view order #{order_id}"
+            )
+        store = db.get_store(conn, order.store_id)
+        as_of = db.world_asof(conn)
+
+    override = store.return_window_days_override if store else None
+    window = effective_return_window_days(facts["return_window_days"], override)
+
+    if order.status != "delivered":
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "eligible": False,
+            "reason": f"order status is '{order.status}'; only delivered orders are eligible for refund",
+            "return_window_days": window,
+            "window_expires": None,
+        }
+    if order.delivered_at is None:
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "eligible": False,
+            "reason": "order has no delivery date recorded",
+            "return_window_days": window,
+            "window_expires": None,
+        }
+    expires = order.delivered_at + timedelta(days=window)
+    age_days = (as_of - order.delivered_at).days
+    if age_days < 0:
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "eligible": False,
+            "reason": f"delivery date {order.delivered_at} is in the future",
+            "return_window_days": window,
+            "window_expires": expires.isoformat(),
+        }
+    if age_days > window:
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "eligible": False,
+            "reason": (
+                f"return window expired on {expires.isoformat()}; "
+                f"order was delivered {order.delivered_at.isoformat()}, "
+                f"{age_days} days ago, which exceeds the {window}-day window"
+            ),
+            "return_window_days": window,
+            "window_expires": expires.isoformat(),
+        }
+    return {
+        "ok": True,
+        "order_id": order_id,
+        "eligible": True,
+        "reason": (
+            f"order is eligible; delivered {order.delivered_at.isoformat()}, "
+            f"{age_days} days ago, within the {window}-day return window "
+            f"(expires {expires.isoformat()})"
+        ),
+        "return_window_days": window,
+        "window_expires": expires.isoformat(),
+    }
+
+
+def get_store_info(ctx: AuthContext, store_name: str) -> dict[str, Any]:
+    """Look up a store's public information by name or slug. Risk tier: read.
+
+    Every role may look up any store's public information (store details
+    are public help-center content), so this tool needs no permission check
+    beyond resolving the store name.
+
+    Args:
+        ctx: The caller's auth context. Unused here, but every tool takes it.
+        store_name: Store name or slug (case-insensitive).
+
+    Returns:
+        On success: {"ok": True, "store_id": int, "name": str, "slug": str,
+        "category": str, "return_window_days": int,
+        "has_return_window_override": bool, "restocking_fee_opt_in": bool,
+        "policy_id": str | None} where return_window_days is the effective
+        window (store override if present, otherwise platform default) and
+        policy_id is the store's policy doc id if one exists.
+        If no store matches: {"ok": False, "error": "not_found",
+        "reason": ...} naming the store string.
+    """
+    facts = load_facts()
+    with db.connection() as conn:
+        store = db.get_store_by_name(conn, store_name)
+    if store is None:
+        return {"ok": False, "error": "not_found", "reason": f"no store matching {store_name!r}"}
+
+    override = store.return_window_days_override
+    window = effective_return_window_days(facts["return_window_days"], override)
+
+    policy_id = None
+    for doc in load_policy_docs():
+        if store.slug in doc.policy_id:
+            policy_id = doc.policy_id
+            break
+
+    return {
+        "ok": True,
+        "store_id": store.id,
+        "name": store.name,
+        "slug": store.slug,
+        "category": store.category,
+        "return_window_days": window,
+        "has_return_window_override": override is not None,
+        "restocking_fee_opt_in": store.restocking_fee_opt_in,
+        "policy_id": policy_id,
+    }
+
+
+def track_shipment(ctx: AuthContext, order_id: int) -> dict[str, Any]:
+    """Return shipping status and estimated delivery for an order. Risk tier: read.
+
+    Uses the same authorization as get_order: shoppers see only their own
+    orders, merchants only their store's orders, support any order.
+
+    Args:
+        ctx: The caller's auth context.
+        order_id: The order to track.
+
+    Returns:
+        On success: {"ok": True, "order_id": int, "status": str,
+        "ordered_at": str, "shipped_at": str | None,
+        "delivered_at": str | None, "estimated_delivery": str | None,
+        "summary": str} where estimated_delivery is computed from
+        shipped_at + shipping transit max days (facts.yaml), and summary
+        is a human-readable description of the current shipping state.
+        On failure: not_found or permission_denied errors.
+    """
+    facts = load_facts()
+    with db.connection() as conn:
+        order = db.get_order(conn, order_id)
+        if order is None:
+            return {"ok": False, "error": "not_found", "reason": f"no order #{order_id}"}
+        if not can_view_order(ctx, order.user_id, order.store_id):
+            return permission_denied(
+                f"role '{ctx.role}' (user {ctx.user_id}) may not view order #{order_id}"
+            )
+
+    transit_days = facts["shipping_transit_days_max"]
+    handling_days = facts["shipping_handling_days_max"]
+
+    if order.status == "placed":
+        est_ship = order.ordered_at + timedelta(days=handling_days)
+        est_delivery = est_ship + timedelta(days=transit_days)
+        summary = (
+            f"order placed on {order.ordered_at.isoformat()}; "
+            f"expected to ship by {est_ship.isoformat()} "
+            f"and arrive by {est_delivery.isoformat()}"
+        )
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "status": order.status,
+            "ordered_at": order.ordered_at.isoformat(),
+            "shipped_at": None,
+            "delivered_at": None,
+            "estimated_delivery": est_delivery.isoformat(),
+            "summary": summary,
+        }
+
+    shipped_at_str = order.shipped_at.isoformat() if order.shipped_at else None
+    delivered_at_str = order.delivered_at.isoformat() if order.delivered_at else None
+
+    if order.status == "shipped" and order.shipped_at is not None:
+        est_delivery = order.shipped_at + timedelta(days=transit_days)
+        summary = (
+            f"shipped on {shipped_at_str}; "
+            f"estimated delivery by {est_delivery.isoformat()}"
+        )
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "status": order.status,
+            "ordered_at": order.ordered_at.isoformat(),
+            "shipped_at": shipped_at_str,
+            "delivered_at": None,
+            "estimated_delivery": est_delivery.isoformat(),
+            "summary": summary,
+        }
+
+    if order.status == "delivered":
+        summary = (
+            f"delivered on {delivered_at_str}"
+        )
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "status": order.status,
+            "ordered_at": order.ordered_at.isoformat(),
+            "shipped_at": shipped_at_str,
+            "delivered_at": delivered_at_str,
+            "estimated_delivery": None,
+            "summary": summary,
+        }
+
+    summary = f"order status is '{order.status}'; shipment tracking is not applicable"
+    return {
+        "ok": True,
+        "order_id": order_id,
+        "status": order.status,
+        "ordered_at": order.ordered_at.isoformat(),
+        "shipped_at": shipped_at_str,
+        "delivered_at": delivered_at_str,
+        "estimated_delivery": None,
+        "summary": summary,
+    }
+
+
+def check_cancel_eligibility(ctx: AuthContext, order_id: int) -> dict[str, Any]:
+    """Check whether an order is eligible for cancellation, with a reason.
+
+    Uses the same authorization as cancel_order: shoppers see only their own
+    orders, merchants only their store's orders, support any order.
+
+    Args:
+        ctx: The caller's auth context.
+        order_id: The order to check.
+
+    Returns:
+        On success: {"ok": True, "order_id": int, "eligible": bool,
+        "reason": str, "current_status": str}
+        On failure: not_found or permission_denied errors.
+    """
+    with db.connection() as conn:
+        order = db.get_order(conn, order_id)
+        if order is None:
+            return {"ok": False, "error": "not_found", "reason": f"no order #{order_id}"}
+        if not can_cancel_order(ctx, order.user_id, order.store_id):
+            return permission_denied(
+                f"role '{ctx.role}' (user {ctx.user_id}) may not cancel order #{order_id}"
+            )
+
+    if order.status == "placed":
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "eligible": True,
+            "reason": "order has status 'placed' and has not shipped yet; it can be cancelled",
+            "current_status": order.status,
+        }
+    return {
+        "ok": True,
+        "order_id": order_id,
+        "eligible": False,
+        "reason": (
+            f"order has status '{order.status}'; "
+            f"only orders with status 'placed' (not yet shipped) can be cancelled"
+        ),
+        "current_status": order.status,
+    }
+
+
+def summarize_order_history(ctx: AuthContext) -> dict[str, Any]:
+    """Aggregate order statistics for the caller's scope. Risk tier: read.
+
+    Role behavior:
+        - shopper: stats for the shopper's own orders.
+        - merchant: stats for the merchant's store's orders.
+        - support: returns invalid_argument (support should look up specific
+          orders rather than aggregating across all orders).
+
+    Returns:
+        On success: {"ok": True, "total_orders": int, "total_spent_usd": float,
+        "by_status": dict, "oldest_order": str | None, "newest_order": str | None}
+    """
+    if ctx.role == "support":
+        return {
+            "ok": False,
+            "error": "invalid_argument",
+            "reason": "support staff should look up specific orders; use get_order or find_order instead",
+        }
+    with db.connection() as conn:
+        if ctx.role == "shopper":
+            orders = db.list_orders_for_user(conn, ctx.user_id, limit=1000)
+        else:
+            orders = db.list_orders_for_store(conn, ctx.store_id, limit=1000)
+
+    if not orders:
+        return {
+            "ok": True,
+            "total_orders": 0,
+            "total_spent_usd": 0.0,
+            "by_status": {},
+            "oldest_order": None,
+            "newest_order": None,
+        }
+
+    by_status: dict[str, int] = {}
+    total_cents = 0
+    for o in orders:
+        by_status[o.status] = by_status.get(o.status, 0) + 1
+        total_cents += o.total_cents
+
+    sorted_orders = sorted(orders, key=lambda o: o.ordered_at)
+    return {
+        "ok": True,
+        "total_orders": len(orders),
+        "total_spent_usd": total_cents / 100,
+        "by_status": by_status,
+        "oldest_order": sorted_orders[0].ordered_at.isoformat(),
+        "newest_order": sorted_orders[-1].ordered_at.isoformat(),
+    }
