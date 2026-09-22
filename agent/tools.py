@@ -282,28 +282,26 @@ def find_order(ctx: AuthContext, query: str) -> dict[str, Any]:
 
     with db.connection() as conn:
         if ctx.role == "shopper":
-            orders = db.list_orders_for_user(conn, ctx.user_id)
+            orders = db.list_order_search_candidates(conn, user_id=ctx.user_id)
         elif ctx.role == "merchant":
-            orders = db.list_orders_for_store(conn, ctx.store_id)
+            orders = db.list_order_search_candidates(conn, store_id=ctx.store_id)
+        elif ctx.role == "support":
+            orders = db.list_order_search_candidates(conn, all_orders=True)
         else:
-            orders = db.list_orders_for_user(conn, ctx.user_id, limit=100)
+            return {"ok": False, "error": "unsupported_role"}
+
+        products = {p.id: p.title for p in db.list_products(conn)}
 
         scored = []
         for order in orders:
-            product = conn.execute(
-                "SELECT title FROM products WHERE id = ?", (order.product_id,)
-            ).fetchone()
-            if product is None:
+            title = products.get(order.product_id)
+            if title is None:
                 continue
-            title = product["title"]
             score = fuzz.partial_ratio(query.lower(), title.lower())
             if score > 70:
-                d = order.to_public_dict()
-                d["product_title"] = title
-                scored.append((score, d))
+                scored.append(order.to_public_dict())
 
-    scored.sort(key=lambda x: -x[0])
-    return {"ok": True, "orders": [item[1] for item in scored[:5]]}
+    return {"ok": True, "orders": scored[:5]}
 
 
 def check_refund_eligibility(ctx: AuthContext, order_id: int) -> dict[str, Any]:

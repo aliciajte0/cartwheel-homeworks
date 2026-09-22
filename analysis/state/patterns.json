@@ -1,1 +1,119 @@
-{"modes": []}
+{
+  "modes": [
+    {
+      "name": "internal_info_leak",
+      "definition": "The agent's reply discloses an internal policy identifier, document name, operational threshold, or system/data issue that is not part of the customer-facing policy content.",
+      "positive_traces": [
+        "c93fd82ee0f059352943b5df32235264",
+        "6126c395752be96f0090b4b2eb1a2cef",
+        "634cee129fb9611f42badb8b19551b30",
+        "41deef34adcfdede08930af4e9f9f29f",
+        "0d8a504dc9c5ff1e8152aecfef00590d",
+        "fec423a9bda99731cfbcf40c3417a74e",
+        "7786a2fbd64287d6012dc930bd1571f3",
+        "b665ebce75336f3bf23afb5ae3f101f8",
+        "5733920f3934e7163875394b7f1b8c4d"
+      ],
+      "close_negatives": [
+        "225f70fbb1a517ee87c884447c88ab06",
+        "35b18ca9ed08be422676761ecd1adc07",
+        "dc00197303aa5bffcdbc4e8dd3db9f8c"
+      ],
+      "product_change": "System prompt instruction to distinguish between information used to make a decision and information the customer should see.",
+      "spec_connection": "Partially RESP-4; likely needs spec revision for internal policy names, thresholds, and system errors.",
+      "likely_evaluator": "llm_judge",
+      "status": "strong"
+    },
+    {
+      "name": "redundant_tool_call",
+      "definition": "The agent calls a tool to obtain information that a previous tool result already provides, or uses a less appropriate tool when a more direct tool is available for the task.",
+      "positive_traces": [
+        "7f3de255db6e9a7a0c613ae21182cb4c",
+        "8115a90a9332c5865e5fb398d6903574",
+        "5519548ecfc4878c4b562e30aaf970d1",
+        "bb723ab7a323e37dc78bf009b4e158b5",
+        "b665ebce75336f3bf23afb5ae3f101f8",
+        "25cbdfc8263ad90f4f9d1fc2c8274074",
+        "340e18635e8568bed28a4656fd1c29f8"
+      ],
+      "close_negatives": [],
+      "product_change": "System prompt guidance about trusting deterministic tool results, not duplicating checks, and selecting the most direct tool.",
+      "spec_connection": "No existing requirement. Would be an efficiency/quality requirement.",
+      "likely_evaluator": "code_check_or_llm_judge",
+      "status": "strong"
+    },
+    {
+      "name": "missing_filter_param",
+      "definition": "The agent calls a search or lookup tool without using an available filter parameter that the user's request directly implies.",
+      "positive_traces": [
+        "53a88f87f7fb285c7f3af0b3bdb41d38",
+        "bce6c1e44440a15a98bb23ca40cf9c01",
+        "dcc7540a3664b735ed3832abc8551811"
+      ],
+      "close_negatives": [],
+      "product_change": "System prompt guidance about using available filter parameters on the first tool call.",
+      "spec_connection": "No existing requirement.",
+      "likely_evaluator": "code_check",
+      "status": "moderate"
+    },
+    {
+      "name": "tool_result_incomplete",
+      "definition": "A tool result omits a field the agent or user needs to make a decision or provide a complete response (e.g., product names, customer IDs).",
+      "positive_traces": [
+        "86343a56020adf04ba49d403dd9e9578",
+        "f6dffc6cbc74e3d8b563dcbe597b64d8",
+        "86e40666bc2ee06badb9ac3bd29ba768",
+        "0afed59faa23fe307fdccfa32b8900ae",
+        "a17fe3a12b47e8117ad23e7fd071e06d",
+        "a4a1caed3be539d543cb9b2242f68c76",
+        "296391dc3e0883d224e96039585cb0f7",
+        "11bab618884a9bea52301078b3f869d4",
+        "cdbfbacdafe80a0c8d88432d437ec046",
+        "d41270566e160df85c3ca0c3824b2d6c",
+        "77db3e97bd8c17b7d9db3f957c6ac4b3"
+      ],
+      "close_negatives": [
+        "b5e31990353e86a6c9e10bb09c48da59"
+      ],
+      "product_change": "Modify tool implementations in tools.py / db.py to return additional fields.",
+      "spec_connection": "Would require revising tool contracts in SPEC.md Section 4.",
+      "likely_evaluator": "code_check",
+      "status": "very_strong"
+    },
+    {
+      "name": "tool_missing_input_filter",
+      "definition": "A tool lacks an input filter parameter that would let the agent scope results to the user's request, forcing the agent to make multiple calls or manually filter.",
+      "positive_traces": [
+        "5530760341345c1f06c72b506bb2c6ee",
+        "723de5d9e5c24c49c136637fcf94021b",
+        "2b8d50e1345057912b97b58539c5557c",
+        "d380f4345d836827fea196acdf431b95"
+      ],
+      "close_negatives": [],
+      "product_change": "Add filter parameters to tool function signatures (e.g., store_id on find_order).",
+      "spec_connection": "Would require revising tool contracts in SPEC.md Section 4.",
+      "likely_evaluator": "code_check",
+      "status": "moderate"
+    },
+    {
+      "name": "missing_clarification_or_escalation",
+      "definition": "The agent encounters ambiguous or anomalous data and proceeds with a response instead of asking a clarifying question or escalating to a human.",
+      "positive_traces": [
+        "c244cd6b8384fb3bb11df9239da9291d",
+        "340e18635e8568bed28a4656fd1c29f8",
+        "c04aee8ce498fa5948c3a504a14f4af1"
+      ],
+      "close_negatives": [],
+      "product_change": "System prompt instruction to recognize data anomalies as an ESC-3/ESC-4 trigger.",
+      "spec_connection": "ESC-3 (disputes agent cannot resolve), ESC-4 (agent unsure whether policy allows action).",
+      "likely_evaluator": "llm_judge",
+      "status": "at_threshold"
+    }
+  ],
+  "dropped": [
+    {"name": "premature_action_commitment", "reason": "Only 1 trace; depth search clean", "traces": ["4e778cbd1833866330565098bdb0f125"]},
+    {"name": "incorrect_escalation", "reason": "Only 1 trace; depth search clean", "traces": ["31d8faa145289efb0499809c4f4b5b30"]},
+    {"name": "insufficient_role_detail", "reason": "Only 1 trace; both depth traces clean", "traces": ["db6d35e33f51ff65297ef35697a17f9d"]},
+    {"name": "unnecessary_narration", "reason": "Only 2 traces; depth traces showed other failures", "traces": ["6126c395752be96f0090b4b2eb1a2cef", "7c5160ca47d1056af42ca616379e2069"]}
+  ]
+}
