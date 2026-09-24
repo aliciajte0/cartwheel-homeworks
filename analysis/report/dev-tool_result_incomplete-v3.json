@@ -1,0 +1,36 @@
+{
+  "judge_id": "tool_result_incomplete-v3",
+  "split": "dev",
+  "tpr": 0.9286,
+  "tnr": 0.4,
+  "tpr_interval": [
+    0.7735,
+    0.9802
+  ],
+  "tnr_interval": [
+    0.2188,
+    0.6134
+  ],
+  "agreement": 0.7083,
+  "tp": 26,
+  "fn": 2,
+  "tn": 8,
+  "fp": 12,
+  "n": 48,
+  "disagreements": [
+    "0afed59faa23fe307fdccfa32b8900ae",
+    "0e9f6e42df1164334b460574b036e537",
+    "59132f693a58e43e4fda535b2f2e91d8",
+    "5e6b833e43f97df93686fba62ba37c45",
+    "7786a2fbd64287d6012dc930bd1571f3",
+    "99ba849d10912ad935a8cac7de24bf37",
+    "a2b3f941c794cfaa858378fd44b31dd2",
+    "cde9287736061c425c8e24414caf3480",
+    "dcc7540a3664b735ed3832abc8551811",
+    "e9eb413dd8acf3460dfd211d0036004f",
+    "ec78cb29673c0bcd475997fa2384eda3",
+    "ff4d6cbded8f97b3fe2a6695a1cac82c",
+    "hw5-tri-003",
+    "hw5-tri-004"
+  ]
+}

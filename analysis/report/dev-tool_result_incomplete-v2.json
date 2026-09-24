@@ -1,0 +1,29 @@
+{
+  "judge_id": "tool_result_incomplete-v2",
+  "split": "dev",
+  "tpr": 0.8929,
+  "tnr": 0.8,
+  "tpr_interval": [
+    0.728,
+    0.9629
+  ],
+  "tnr_interval": [
+    0.584,
+    0.9193
+  ],
+  "agreement": 0.8542,
+  "tp": 25,
+  "fn": 3,
+  "tn": 16,
+  "fp": 4,
+  "n": 48,
+  "disagreements": [
+    "0afed59faa23fe307fdccfa32b8900ae",
+    "5e6b833e43f97df93686fba62ba37c45",
+    "723de5d9e5c24c49c136637fcf94021b",
+    "7786a2fbd64287d6012dc930bd1571f3",
+    "7c5160ca47d1056af42ca616379e2069",
+    "9958d93bbdc0ecd705f4b358b7d190e7",
+    "hw5-tri-004"
+  ]
+}
