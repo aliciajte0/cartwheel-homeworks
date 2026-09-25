@@ -75,6 +75,11 @@ Successful results contain `ok: true` and the result fields. Expected failures c
 | TOOL-7 | `issue_refund` | order identifier, amount, reason | creates a refund record; marks the order refunded only for an automatically approved refund | write |
 | TOOL-8 | `cancel_order` | order identifier, reason | marks an eligible order cancelled | write |
 | TOOL-9 | `escalate_to_human` | summary, context | creates a support ticket | write |
+| TOOL-10 | `check_refund_eligibility` | order identifier | none | read |
+| TOOL-11 | `get_store_info` | store name or slug | none | read |
+| TOOL-12 | `track_shipment` | order identifier | none | read |
+| TOOL-13 | `check_cancel_eligibility` | order identifier | none | read |
+| TOOL-14 | `summarize_order_history` | none | none | read |
 
 ### Success and failure contracts
 
@@ -89,6 +94,11 @@ Successful results contain `ok: true` and the result fields. Expected failures c
 | `issue_refund` | `refund_id`, `order_id`, `amount_usd`, and `status`. Status is `auto_approved` at or below the threshold and `queued_for_approval` above it. | `invalid_argument` for a nonpositive amount or an amount above the order total; `not_found` for an unknown order; `permission_denied` for an unauthorized caller; `not_eligible` for an ineligible order; `paused` when refunds are disabled. |
 | `cancel_order` | `order_id` and `status: cancelled` after updating an authorized order whose current status is `placed`. | `not_found` for an unknown order; `permission_denied` for an unauthorized caller; `not_eligible` when the order is no longer `placed`; `paused` when cancellations are disabled. |
 | `escalate_to_human` | `ticket_id` and `sla_hours` after creating the support ticket. | Execution exception if ticket creation fails. |
+| `check_refund_eligibility` | `order_id`, `eligible` (boolean), `reason` (human-readable explanation of why the order is or is not eligible), `return_window_days` (the effective return window, accounting for store overrides), and `window_expires` (the last eligible date, or null if not applicable). | `not_found` for an unknown order; `permission_denied` for an order outside the caller's scope. |
+| `get_store_info` | `store_id`, `name`, `slug`, `category`, `return_window_days` (effective window, accounting for store override), `has_return_window_override` (boolean), `restocking_fee_opt_in` (boolean), and `policy_id` (the store's policy doc identifier, or null if none exists). | `not_found` for an unknown store name or slug. |
+| `track_shipment` | `order_id`, `status`, `ordered_at`, `shipped_at`, `delivered_at`, `estimated_delivery` (computed from shipped date plus transit max, or from order date plus handling max plus transit max; null for delivered or non-shippable statuses), and `summary` (human-readable shipping state). | `not_found` for an unknown order; `permission_denied` for an order outside the caller's scope. |
+| `check_cancel_eligibility` | `order_id`, `eligible` (boolean), `reason` (human-readable explanation of why the order can or cannot be cancelled), and `current_status` (the order's current status). | `not_found` for an unknown order; `permission_denied` for an order outside the caller's scope. |
+| `summarize_order_history` | `total_orders`, `total_spent_usd`, `by_status` (object mapping each status to its count), `oldest_order` (date of earliest order, or null if none), and `newest_order` (date of most recent order, or null if none). | `invalid_argument` for a support caller (support staff should look up specific orders). |
 
 ## 5. Escalation policy
 

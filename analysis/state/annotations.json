@@ -1,1 +1,900 @@
-{"annotations": []}
+[
+  {
+    "id": "a1789602808354268",
+    "trace_id": "53a88f87f7fb285c7f3af0b3bdb41d38",
+    "quote": "Northwind Books",
+    "idx": 4,
+    "note": "Agent should have filtered by Northwind Books before replying to customer",
+    "ts": "2026-09-16T23:53:28.354Z"
+  },
+  {
+    "id": "a1789614881821434",
+    "trace_id": "86343a56020adf04ba49d403dd9e9578",
+    "quote": "",
+    "idx": 4,
+    "note": "Order ID does not include description. That makes it very difficult for a user to figure out which order is what!",
+    "ts": "2026-09-17T03:14:41.821Z"
+  },
+  {
+    "id": "c1789614900741326",
+    "trace_id": "6d73f8cf9c90d6628fbeba24a521fbec",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:15:00.741Z"
+  },
+  {
+    "id": "a1789614940286562",
+    "trace_id": "bce6c1e44440a15a98bb23ca40cf9c01",
+    "quote": "",
+    "idx": 4,
+    "note": "the user is asking for products in blue heron ceramics. So the Agent should show all products.",
+    "ts": "2026-09-17T03:15:40.286Z"
+  },
+  {
+    "id": "c1789615003230331",
+    "trace_id": "e9eb413dd8acf3460dfd211d0036004f",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:16:43.230Z"
+  },
+  {
+    "id": "a1789615191422388",
+    "trace_id": "db6d35e33f51ff65297ef35697a17f9d",
+    "quote": "",
+    "idx": 18,
+    "note": "should provide a better response to help the support agent triaging this request.",
+    "ts": "2026-09-17T03:19:51.422Z"
+  },
+  {
+    "id": "a1789615257182921",
+    "trace_id": "c93fd82ee0f059352943b5df32235264",
+    "quote": "",
+    "idx": 22,
+    "note": "do not leak internal details about policies such as order totla over $100 should be queued for human review",
+    "ts": "2026-09-17T03:20:57.182Z"
+  },
+  {
+    "id": "c1789615278364467",
+    "trace_id": "5108c427dde90a524f90858e02c1f086",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:21:18.364Z"
+  },
+  {
+    "id": "c178961531677439",
+    "trace_id": "ec78cb29673c0bcd475997fa2384eda3",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:21:56.774Z"
+  },
+  {
+    "id": "a1789615558994696",
+    "trace_id": "7f3de255db6e9a7a0c613ae21182cb4c",
+    "quote": "",
+    "idx": 9,
+    "note": "Too many tool calls. Why does the agent need to check return/refund policy eligibility by store? Isn't check_refund_eligibility also deterministic by store?",
+    "ts": "2026-09-17T03:25:58.994Z"
+  },
+  {
+    "id": "a1789615640707358",
+    "trace_id": "31d8faa145289efb0499809c4f4b5b30",
+    "quote": "",
+    "idx": 9,
+    "note": "The Agent should just deny the request and not escalate to human. Merchants can't access orders not from their won store.",
+    "ts": "2026-09-17T03:27:20.707Z"
+  },
+  {
+    "id": "c1789615672923781",
+    "trace_id": "974356431fc9b33b27a554410a43027a",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:27:52.923Z"
+  },
+  {
+    "id": "a1789615708688806",
+    "trace_id": "dcc7540a3664b735ed3832abc8551811",
+    "quote": "",
+    "idx": 4,
+    "note": "Should filter by Store Name right away and not do another order search.",
+    "ts": "2026-09-17T03:28:28.688Z"
+  },
+  {
+    "id": "c178961575532514",
+    "trace_id": "84af991f9243cb8ff0998e20eb1e4eae",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:29:15.325Z"
+  },
+  {
+    "id": "c1789615826046508",
+    "trace_id": "ff4d6cbded8f97b3fe2a6695a1cac82c",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:30:26.046Z"
+  },
+  {
+    "id": "a1789615865178399",
+    "trace_id": "6126c395752be96f0090b4b2eb1a2cef",
+    "quote": "",
+    "idx": 4,
+    "note": "Shouldn't tell the customer it found the main policy. Should just show the policy directly.",
+    "ts": "2026-09-17T03:31:05.178Z"
+  },
+  {
+    "id": "a1789615877827851",
+    "trace_id": "6126c395752be96f0090b4b2eb1a2cef",
+    "quote": "",
+    "idx": 7,
+    "note": "Should not let customers know that refunds of less than $100 are processed automatically.",
+    "ts": "2026-09-17T03:31:17.827Z"
+  },
+  {
+    "id": "c1789615897521977",
+    "trace_id": "0819db5c15546dd97bdf2326d97e251d",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:31:37.521Z"
+  },
+  {
+    "id": "c1789615932920506",
+    "trace_id": "4bbfae8c34c05e10d62992f988035e73",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:32:12.920Z"
+  },
+  {
+    "id": "c1789615939479795",
+    "trace_id": "ba06b0daeefd002834b105dccbe246f5",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:32:19.479Z"
+  },
+  {
+    "id": "a178961602912145",
+    "trace_id": "f6dffc6cbc74e3d8b563dcbe597b64d8",
+    "quote": "",
+    "idx": 4,
+    "note": "get_order should show customer ID so that agent can confirm whether order belongs to customer.",
+    "ts": "2026-09-17T03:33:49.121Z"
+  },
+  {
+    "id": "c1789616037048655",
+    "trace_id": "35237973f4c4803ba74a49c92bc665e3",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:33:57.048Z"
+  },
+  {
+    "id": "a1789616061830117",
+    "trace_id": "86e40666bc2ee06badb9ac3bd29ba768",
+    "quote": "",
+    "idx": 4,
+    "note": "get_order should show customer Id so that Agent can confirm",
+    "ts": "2026-09-17T03:34:21.830Z"
+  },
+  {
+    "id": "c1789616068261124",
+    "trace_id": "0957f98e001a22fabe29a99bb5aea783",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:34:28.261Z"
+  },
+  {
+    "id": "c1789616076178766",
+    "trace_id": "960c76841a91315782193b959e1be199",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:34:36.178Z"
+  },
+  {
+    "id": "a1789616103772645",
+    "trace_id": "634cee129fb9611f42badb8b19551b30",
+    "quote": "",
+    "idx": 7,
+    "note": "do not leak internal policy names through policy source",
+    "ts": "2026-09-17T03:35:03.772Z"
+  },
+  {
+    "id": "a1789616116875419",
+    "trace_id": "41deef34adcfdede08930af4e9f9f29f",
+    "quote": "",
+    "idx": 7,
+    "note": "do not leak policy names.",
+    "ts": "2026-09-17T03:35:16.875Z"
+  },
+  {
+    "id": "a1789616130104687",
+    "trace_id": "0d8a504dc9c5ff1e8152aecfef00590d",
+    "quote": "",
+    "idx": 4,
+    "note": "do not leak policy names",
+    "ts": "2026-09-17T03:35:30.104Z"
+  },
+  {
+    "id": "a1789616144828814",
+    "trace_id": "0d8a504dc9c5ff1e8152aecfef00590d",
+    "quote": "",
+    "idx": 4,
+    "note": "Do not let customers know that refunds of less than $100 are processed automatically",
+    "ts": "2026-09-17T03:35:44.828Z"
+  },
+  {
+    "id": "a1789616195551395",
+    "trace_id": "8115a90a9332c5865e5fb398d6903574",
+    "quote": "",
+    "idx": 9,
+    "note": "why does Agent need to search for return policy when refund is eligible.",
+    "ts": "2026-09-17T03:36:35.551Z"
+  },
+  {
+    "id": "c1789616224476380",
+    "trace_id": "242e816aaa181317311f007095dfe399",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:37:04.476Z"
+  },
+  {
+    "id": "c1789616237255623",
+    "trace_id": "b2bcdf13d4786989dc8e817efc04af71",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:37:17.255Z"
+  },
+  {
+    "id": "c1789616251932890",
+    "trace_id": "39d621e6646d7f5b24ddc1c6a07b5bd5",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:37:31.932Z"
+  },
+  {
+    "id": "a178961734611435",
+    "trace_id": "a4a1caed3be539d543cb9b2242f68c76",
+    "quote": "",
+    "idx": 4,
+    "note": "Reply does not include the product name",
+    "ts": "2026-09-17T03:55:46.114Z"
+  },
+  {
+    "id": "c1789617433393380",
+    "trace_id": "38be27f2ea383c8e79473ded43362492",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:57:13.393Z"
+  },
+  {
+    "id": "c178961744677296",
+    "trace_id": "1d5b7bfe6b6207ea80eb345af398770e",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:57:26.772Z"
+  },
+  {
+    "id": "c1789617491446257",
+    "trace_id": "ed5d2d977dc819d2b3d976bec925453a",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:58:11.446Z"
+  },
+  {
+    "id": "c1789617512387631",
+    "trace_id": "e38bf0cdcfca94ad52d3becb3001e5ec",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T03:58:32.387Z"
+  },
+  {
+    "id": "a1789617596255449",
+    "trace_id": "4e778cbd1833866330565098bdb0f125",
+    "quote": "",
+    "idx": 4,
+    "note": "Agent shouldn't say it's going to issue refund before checking refund_eligibility. It's not choosing the right too - which is check_refund_eligibility",
+    "ts": "2026-09-17T03:59:56.255Z"
+  },
+  {
+    "id": "c1789617652203615",
+    "trace_id": "a2b3f941c794cfaa858378fd44b31dd2",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T04:00:52.203Z"
+  },
+  {
+    "id": "a1789617675090944",
+    "trace_id": "fec423a9bda99731cfbcf40c3417a74e",
+    "quote": "",
+    "idx": 7,
+    "note": "Should not leak details about data issues",
+    "ts": "2026-09-17T04:01:15.090Z"
+  },
+  {
+    "id": "a1789617706949894",
+    "trace_id": "0afed59faa23fe307fdccfa32b8900ae",
+    "quote": "",
+    "idx": 4,
+    "note": "Should list names of the other products.",
+    "ts": "2026-09-17T04:01:46.949Z"
+  },
+  {
+    "id": "a1789618155828218",
+    "trace_id": "a17fe3a12b47e8117ad23e7fd071e06d",
+    "quote": "",
+    "idx": 13,
+    "note": "SHowing Product IDs from Blue Heron is not helpful to the reply. Should at least show the names of the products.",
+    "ts": "2026-09-17T04:09:15.828Z"
+  },
+  {
+    "id": "a178966086419149",
+    "trace_id": "296391dc3e0883d224e96039585cb0f7",
+    "quote": "",
+    "idx": 27,
+    "note": "order tool should return customer_id so that Agent can confirm that the order belongs to customer 119",
+    "ts": "2026-09-17T16:01:04.191Z"
+  },
+  {
+    "id": "c1789660909391431",
+    "trace_id": "59132f693a58e43e4fda535b2f2e91d8",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:01:49.391Z"
+  },
+  {
+    "id": "a1789661024882977",
+    "trace_id": "c244cd6b8384fb3bb11df9239da9291d",
+    "quote": "",
+    "idx": 7,
+    "note": "Data issue. Should ask the customer what the concern is to figure out what to do next. Should probably escalate to a human.",
+    "ts": "2026-09-17T16:03:44.882Z"
+  },
+  {
+    "id": "c1789661028395105",
+    "trace_id": "426eec2013567dc92db3dd55b4d12375",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:03:48.395Z"
+  },
+  {
+    "id": "c1789661042322531",
+    "trace_id": "13cb8c883c0f4d3b3a923fa56c79d2f7",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:04:02.322Z"
+  },
+  {
+    "id": "c1789661083425510",
+    "trace_id": "b4090d0ad381686857f959270f63ae25",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:04:43.425Z"
+  },
+  {
+    "id": "a1789661150824966",
+    "trace_id": "5519548ecfc4878c4b562e30aaf970d1",
+    "quote": "",
+    "idx": 4,
+    "note": "Shouldn't need to track shipment since the get_order tool already shows that order is already delivered. Excessive tool call",
+    "ts": "2026-09-17T16:05:50.824Z"
+  },
+  {
+    "id": "c1789661223420144",
+    "trace_id": "a946b4140157fbd1233c625da1f93a3d",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:07:03.420Z"
+  },
+  {
+    "id": "c1789661266289170",
+    "trace_id": "511113867b4cc300d823d7d9f4c01620",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:07:46.289Z"
+  },
+  {
+    "id": "c178966127409553",
+    "trace_id": "bbd8564ee8ea7a6df6e5f3c666494365",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:07:54.095Z"
+  },
+  {
+    "id": "c1789661284988468",
+    "trace_id": "1b97b52314827606979bef391d89669d",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:08:04.988Z"
+  },
+  {
+    "id": "c1789661295245835",
+    "trace_id": "30d471de2af25c1d37be4451be1b978e",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:08:15.245Z"
+  },
+  {
+    "id": "c1789661310532624",
+    "trace_id": "c3253086e4f126cfad8a27e323320841",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:08:30.533Z"
+  },
+  {
+    "id": "c1789661330999507",
+    "trace_id": "cc961529d2a715ee7c133fcdcae9058e",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:08:50.999Z"
+  },
+  {
+    "id": "c1789661356303965",
+    "trace_id": "5768418811c88b8b2a206b9c97739055",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:09:16.303Z"
+  },
+  {
+    "id": "c1789661372629574",
+    "trace_id": "d940401d8269ca131d6f5f966171a08a",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:09:32.629Z"
+  },
+  {
+    "id": "c1789661386207614",
+    "trace_id": "d5ee929f9c279c04432d9f633ce73453",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:09:46.207Z"
+  },
+  {
+    "id": "a1789661430912968",
+    "trace_id": "7c5160ca47d1056af42ca616379e2069",
+    "quote": "",
+    "idx": 4,
+    "note": "Excessive description of what the agent is doing. It shoudl just proceed to do the tool calls before coming back with the right order.",
+    "ts": "2026-09-17T16:10:30.912Z"
+  },
+  {
+    "id": "c1789661699259980",
+    "trace_id": "0e9f6e42df1164334b460574b036e537",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:14:59.259Z"
+  },
+  {
+    "id": "a1789663329302269",
+    "trace_id": "7786a2fbd64287d6012dc930bd1571f3",
+    "quote": "",
+    "idx": 24,
+    "note": "leaks details about specifics of refund policies (above $100)",
+    "ts": "2026-09-17T16:42:09.302Z"
+  },
+  {
+    "id": "c1789663330620625",
+    "trace_id": "7786a2fbd64287d6012dc930bd1571f3",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:42:10.620Z"
+  },
+  {
+    "id": "c1789663349498290",
+    "trace_id": "8c3fd88a3d7a5989f094949ac77c4320",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:42:29.498Z"
+  },
+  {
+    "id": "c1789663371650412",
+    "trace_id": "b5e31990353e86a6c9e10bb09c48da59",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:42:51.650Z"
+  },
+  {
+    "id": "a1789663420354903",
+    "trace_id": "bb723ab7a323e37dc78bf009b4e158b5",
+    "quote": "",
+    "idx": 5,
+    "note": "wrong tool call - it's calling get_orders() separately when there is a list_my_orders tool call availalbe",
+    "ts": "2026-09-17T16:43:40.354Z"
+  },
+  {
+    "id": "c1789663421568249",
+    "trace_id": "bb723ab7a323e37dc78bf009b4e158b5",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:43:41.568Z"
+  },
+  {
+    "id": "a1789663472371292",
+    "trace_id": "d41270566e160df85c3ca0c3824b2d6c",
+    "quote": "",
+    "idx": 13,
+    "note": "reply does not show the product name",
+    "ts": "2026-09-17T16:44:32.371Z"
+  },
+  {
+    "id": "c1789663491529146",
+    "trace_id": "9958d93bbdc0ecd705f4b358b7d190e7",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:44:51.529Z"
+  },
+  {
+    "id": "c1789663501087740",
+    "trace_id": "bfc927678507ff5fa0ec6cb7bd683c78",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:45:01.087Z"
+  },
+  {
+    "id": "c1789663651208995",
+    "trace_id": "bdc9f32610c276826d41e28eed940f16",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T16:47:31.208Z"
+  },
+  {
+    "id": "a1789663688213910",
+    "trace_id": "b665ebce75336f3bf23afb5ae3f101f8",
+    "quote": "",
+    "idx": 7,
+    "note": "excessive tool call. Why did the agent need to get order when order ID was already available?",
+    "ts": "2026-09-17T16:48:08.213Z"
+  },
+  {
+    "id": "a1789663719717217",
+    "trace_id": "b665ebce75336f3bf23afb5ae3f101f8",
+    "quote": "",
+    "idx": 15,
+    "note": "leaks details of auto-approval threshold",
+    "ts": "2026-09-17T16:48:39.717Z"
+  },
+  {
+    "id": "a1789663781362884",
+    "trace_id": "25cbdfc8263ad90f4f9d1fc2c8274074",
+    "quote": "",
+    "idx": 1,
+    "note": "Excessive tool calls and wrong tool calls. The Agent should be using get_store_info",
+    "ts": "2026-09-17T16:49:41.362Z"
+  },
+  {
+    "id": "a1789663813111131",
+    "trace_id": "5733920f3934e7163875394b7f1b8c4d",
+    "quote": "",
+    "idx": 7,
+    "note": "should not leak details if there's likely a data issue.",
+    "ts": "2026-09-17T16:50:13.111Z"
+  },
+  {
+    "id": "a1789663825743862",
+    "trace_id": "11bab618884a9bea52301078b3f869d4",
+    "quote": "",
+    "idx": 4,
+    "note": "Should show product names in the results",
+    "ts": "2026-09-17T16:50:25.743Z"
+  },
+  {
+    "id": "a1789663907029773",
+    "trace_id": "cdbfbacdafe80a0c8d88432d437ec046",
+    "quote": "",
+    "idx": 9,
+    "note": "order lookup missing customer id field",
+    "ts": "2026-09-17T16:51:47.029Z"
+  },
+  {
+    "id": "a1789663958517816",
+    "trace_id": "340e18635e8568bed28a4656fd1c29f8",
+    "quote": "",
+    "idx": 8,
+    "note": "excessive tool calls to check refund eligibility, get store info, and returns policy. Should ahve just escalated directly to human since this is a data issue.",
+    "ts": "2026-09-17T16:52:38.517Z"
+  },
+  {
+    "id": "a1789664983607271",
+    "trace_id": "c04aee8ce498fa5948c3a504a14f4af1",
+    "quote": "",
+    "idx": 15,
+    "note": "Should have escalated",
+    "ts": "2026-09-17T17:09:43.607Z"
+  },
+  {
+    "id": "a1789665044156158",
+    "trace_id": "77db3e97bd8c17b7d9db3f957c6ac4b3",
+    "quote": "",
+    "idx": 16,
+    "note": "Should show some product details",
+    "ts": "2026-09-17T17:10:44.156Z"
+  },
+  {
+    "id": "c1789665079768577",
+    "trace_id": "dc00197303aa5bffcdbc4e8dd3db9f8c",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:11:19.768Z"
+  },
+  {
+    "id": "c1789665094730809",
+    "trace_id": "e7784bbefb9df35da604c636534ab5fe",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:11:34.730Z"
+  },
+  {
+    "id": "c1789665120462453",
+    "trace_id": "225f70fbb1a517ee87c884447c88ab06",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:12:00.462Z"
+  },
+  {
+    "id": "c1789665128335661",
+    "trace_id": "a1bd7d3d91d2d3fbaa0269e7b658d9a5",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:12:08.335Z"
+  },
+  {
+    "id": "c178966514211929",
+    "trace_id": "35b18ca9ed08be422676761ecd1adc07",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:12:22.119Z"
+  },
+  {
+    "id": "a1789665243570210",
+    "trace_id": "5530760341345c1f06c72b506bb2c6ee",
+    "quote": "",
+    "idx": 1,
+    "note": "too many tool calls. find_order tool ideally should be enhanced so that find_order can be filtered by store id.",
+    "ts": "2026-09-17T17:14:03.570Z"
+  },
+  {
+    "id": "a1789665485227178",
+    "trace_id": "723de5d9e5c24c49c136637fcf94021b",
+    "quote": "",
+    "idx": 2,
+    "note": "find order tool should allow filtering by store for merchant",
+    "ts": "2026-09-17T17:18:05.227Z"
+  },
+  {
+    "id": "a1789665509974966",
+    "trace_id": "2b8d50e1345057912b97b58539c5557c",
+    "quote": "",
+    "idx": 2,
+    "note": "too many tool calls. find_order should allow filtering by customer id.",
+    "ts": "2026-09-17T17:18:29.974Z"
+  },
+  {
+    "id": "a178966553959348",
+    "trace_id": "d380f4345d836827fea196acdf431b95",
+    "quote": "",
+    "idx": 2,
+    "note": "too many tool calls. Find order should allow filtering by store id or store name.",
+    "ts": "2026-09-17T17:18:59.593Z"
+  },
+  {
+    "id": "c1789667833993174",
+    "trace_id": "0cebdad670b884b6123a626bce5725f1",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:57:13.993Z"
+  },
+  {
+    "id": "c1789667842584770",
+    "trace_id": "0eca51039ed511a583938143c1f4ec64",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:57:22.584Z"
+  },
+  {
+    "id": "c1789667848282366",
+    "trace_id": "5d15d5fd98873ca043b5b07df1ebd5e3",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:57:28.282Z"
+  },
+  {
+    "id": "a178966795768476",
+    "trace_id": "6ecc04503559ae4913da244d4a701e37",
+    "quote": "",
+    "idx": 2,
+    "note": "maybe allow search_products to search for all products in a specific store. I.e. if store is populated, allow query to be empty.",
+    "ts": "2026-09-17T17:59:17.684Z"
+  },
+  {
+    "id": "c1789667968444492",
+    "trace_id": "23c91e91f31f08204a2e33368fe9c4fa",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:59:28.444Z"
+  },
+  {
+    "id": "c1789667970833349",
+    "trace_id": "e5cf4764adce12f811f2fd70d5b8a1ac",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T17:59:30.833Z"
+  },
+  {
+    "id": "a178966801571036",
+    "trace_id": "ca546c42287c15356cf1a0d82624a04b",
+    "quote": "",
+    "idx": 16,
+    "note": "Should be able to pull product name even if order is not already refunded.",
+    "ts": "2026-09-17T18:00:15.710Z"
+  },
+  {
+    "id": "c1789668062354914",
+    "trace_id": "2eb3eafa92cd0539b76b29b00a810bc2",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T18:01:02.354Z"
+  },
+  {
+    "id": "c1789668078432672",
+    "trace_id": "532da857675fb0c9eecaf2e92f62ecdf",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T18:01:18.432Z"
+  },
+  {
+    "id": "c1789668128440128",
+    "trace_id": "99ba849d10912ad935a8cac7de24bf37",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T18:02:08.440Z"
+  },
+  {
+    "id": "c1789668167278762",
+    "trace_id": "53ef7f8625cfd0fb68382a0ec22ac547",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T18:02:47.278Z"
+  },
+  {
+    "id": "c1789668178343910",
+    "trace_id": "cde9287736061c425c8e24414caf3480",
+    "quote": "",
+    "idx": -1,
+    "note": "no failure observed",
+    "source": "mark_clean",
+    "ts": "2026-09-17T18:02:58.343Z"
+  },
+  {
+    "id": "a178966820127255",
+    "trace_id": "fd55f154c7f977b47fcfbef0d9b79f81",
+    "quote": "",
+    "idx": 13,
+    "note": "don't leak internal policy names to customers",
+    "ts": "2026-09-17T18:03:21.272Z"
+  },
+  {
+    "id": "a1789668249844515",
+    "trace_id": "5e6b833e43f97df93686fba62ba37c45",
+    "quote": "",
+    "idx": 19,
+    "note": "Should show product names in answer",
+    "ts": "2026-09-17T18:04:09.844Z"
+  },
+  {
+    "id": "a1789668321675832",
+    "trace_id": "3a0b2a6d2bee8a321187bd1712358efc",
+    "quote": "",
+    "idx": 7,
+    "note": "Why is store \"likely copperline tools\". Is this the agent hallucinating? This makes me lost trust in the agent.",
+    "ts": "2026-09-17T18:05:21.675Z"
+  }
+]

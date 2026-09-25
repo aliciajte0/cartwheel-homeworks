@@ -72,11 +72,14 @@ or credential changes, and anything outside Cartwheel.
   order's refund eligibility.
 - Do not cancel orders directly. Tell the customer to contact support by email
   to cancel an order.
+- Always refund the full order total. If a user requests a partial refund,
+  call escalate_to_human so a human can handle it.
 
 ## Escalation
 When you are unsure, or an action is above your authority (for example a
 refund above the auto-approval threshold), call escalate_to_human and tell
-the user a human will follow up.
+the user a human will follow up. Account changes of any kind are above your
+authority; call escalate_to_human so a human can handle the request.
 
 ## Tone
 Plain and warm. No legalese.
@@ -423,6 +426,46 @@ def find_order(
     return _call(wrapper, hw_tools.find_order, query)
 
 
+@function_tool
+def check_refund_eligibility(
+    wrapper: RunContextWrapper[AuthContext], order_id: int
+) -> dict[str, Any]:
+    """Check whether an order is eligible for a return or refund, with a detailed reason."""
+    return _call(wrapper, hw_tools.check_refund_eligibility, order_id)
+
+
+@function_tool
+def get_store_info(
+    wrapper: RunContextWrapper[AuthContext], store_name: str
+) -> dict[str, Any]:
+    """Look up a store's public info: return window, restocking fee policy, and store policy doc id."""
+    return _call(wrapper, hw_tools.get_store_info, store_name)
+
+
+@function_tool
+def track_shipment(
+    wrapper: RunContextWrapper[AuthContext], order_id: int
+) -> dict[str, Any]:
+    """Track shipping status and estimated delivery for an order."""
+    return _call(wrapper, hw_tools.track_shipment, order_id)
+
+
+@function_tool
+def check_cancel_eligibility(
+    wrapper: RunContextWrapper[AuthContext], order_id: int
+) -> dict[str, Any]:
+    """Check whether an order can be cancelled, with a detailed reason."""
+    return _call(wrapper, hw_tools.check_cancel_eligibility, order_id)
+
+
+@function_tool
+def summarize_order_history(
+    wrapper: RunContextWrapper[AuthContext],
+) -> dict[str, Any]:
+    """Show aggregate order stats for the caller (total orders, spend, status breakdown)."""
+    return _call(wrapper, hw_tools.summarize_order_history)
+
+
 # Progressive disclosure: a session exposes only the tools its role can use.
 # Fewer tools mean fewer wrong choices and cleaner evals. At dev scale the
 # only difference is that support staff, who have no orders of their own,
@@ -435,10 +478,14 @@ _COMMON_TOOLS = [
     issue_refund,
     cancel_order,
     escalate_to_human,
+    check_refund_eligibility,
+    get_store_info,
+    track_shipment,
+    check_cancel_eligibility,
 ]
 TOOLS_BY_ROLE = {
-    "shopper": _COMMON_TOOLS + [list_my_orders, find_order],
-    "merchant": _COMMON_TOOLS + [list_my_orders, find_order],
+    "shopper": _COMMON_TOOLS + [list_my_orders, find_order, summarize_order_history],
+    "merchant": _COMMON_TOOLS + [list_my_orders, find_order, summarize_order_history],
     "support": _COMMON_TOOLS + [find_order],
 }
 
