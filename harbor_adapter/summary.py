@@ -47,9 +47,15 @@ def summarize_job(
     if not result_path.exists():
         raise FileNotFoundError(f"Harbor result not found: {result_path}")
     result = json.loads(result_path.read_text())
+    trial_results = result.get("trial_results", [])
+    if not trial_results:
+        for child in sorted(job_dir.iterdir()):
+            child_result = child / "result.json"
+            if child.is_dir() and child_result.exists():
+                trial_results.append(json.loads(child_result.read_text()))
     trials: dict[str, list[dict[str, Any]]] = defaultdict(list)
     unknown: list[str] = []
-    for trial in result.get("trial_results", []):
+    for trial in trial_results:
         case_id = _case_id(str(trial.get("task_name", "")), set(by_id))
         if case_id is None:
             unknown.append(str(trial.get("task_name", "")))

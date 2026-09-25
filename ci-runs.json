@@ -1,0 +1,11 @@
+{
+  "regression_case_id": "e-002",
+  "regression_description": "Added a system prompt instruction blocking cancel_order: 'Do not cancel orders directly. Tell the customer to contact support by email to cancel an order.' This prevents the agent from calling cancel_order, which e-002 requires.",
+  "run_1_url": "https://github.com/aliciajte0/cartwheel-homeworks/actions/runs/36197074238",
+  "run_1_result": "failure",
+  "run_1_e002": "0/5 passed, CI decision: block",
+  "run_2_url": "https://github.com/aliciajte0/cartwheel-homeworks/actions/runs/36198787857",
+  "run_2_result": "failure",
+  "run_2_e002": "5/5 passed, CI decision: pass",
+  "explanation": "Run 1 included a prompt instruction that told the agent to refuse cancel requests, so e-002 (cancel order 1532) failed all 5 trials. After reverting that instruction, Run 2 showed e-002 passing 5/5. The overall Run 2 still failed because e-001 is fragile (1/5), but the intentional regression on e-002 was clearly demonstrated and reverted."
+}
